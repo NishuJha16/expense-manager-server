@@ -66,7 +66,6 @@ export class ExpensesService {
   }
 
   async getCategoryWiseExpenses(userId: number): Promise<any[]> {
-    console.log(userId);
     return this.expenseRepository
       .createQueryBuilder('expense')
       .select('expense.category', 'category')

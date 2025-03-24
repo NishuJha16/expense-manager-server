@@ -81,7 +81,6 @@ export class ExpensesController {
   @ApiOperation({ summary: 'Get expenses grouped by category' })
   @ApiResponse({ status: 200, description: 'Category-wise expense report.' })
   async getCategoryWiseExpenses(@Req() req: any) {
-    console.log(req);
     const userId = req.user.userId;
     if (!userId) {
       throw new Error('User ID is not available in the request.');

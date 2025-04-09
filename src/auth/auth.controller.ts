@@ -27,13 +27,13 @@ export class AuthController {
     return this.authService.login(loginDto.username, loginDto.password);
   }
 
-  //   @Post('logout')
-  //   @ApiOperation({ summary: 'Logout the currently logged-in user' })
-  //   @ApiBearerAuth()
-  //   @UseGuards(JwtAuthGuard)
-  //   @ApiResponse({ status: 200, description: 'User successfully logged out.' })
-  //   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  //   async logout(@Req() req: any): Promise<void> {
-  //     await this.authService.logout(req.user.id);
-  //   }
+  @Post('logout')
+  @ApiOperation({ summary: 'Logout the currently logged-in user' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: 'User successfully logged out.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async logout(@Req() req: any): Promise<void> {
+    await this.authService.logout(req.user.id);
+  }
 }

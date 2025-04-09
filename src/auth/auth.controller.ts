@@ -32,7 +32,6 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'User successfully logged out.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async logout(@Req() req: any): Promise<void> {
     await this.authService.logout(req.user.id);
   }

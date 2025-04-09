@@ -54,7 +54,7 @@ export class ExpensesController {
   })
   async findAll(@Req() req: any): Promise<Expense[]> {
     const userId = req.user.userId;
-    return this.expensesService.findAll(userId);
+    return await this.expensesService.findAll(userId);
   }
 
   @Get('monthly/:month/:year')

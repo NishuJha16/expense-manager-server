@@ -31,7 +31,14 @@ export class ExpensesService {
   }
 
   async findAll(userId: number): Promise<Expense[]> {
-    return this.expenseRepository.find({ where: { user: { id: userId } } });
+    return this.expenseRepository.find({
+      where: {
+        user: { id: userId },
+      },
+      order: {
+        datetime: 'DESC',
+      },
+    });
   }
 
   async findOneById(id: number, userId: number): Promise<Expense> {

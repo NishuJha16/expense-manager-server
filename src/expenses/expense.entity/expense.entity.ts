@@ -41,6 +41,16 @@ export class Expense {
   @ManyToOne(() => User, (user) => user.expenses)
   user: User;
 
+  @Column({ default: false })
+  isRecurring: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: ['daily', 'weekly', 'monthly', 'yearly'],
+    nullable: true,
+  })
+  recurrencePattern: 'daily' | 'weekly' | 'monthly' | 'yearly';
+
   // Automatically set the month and year before insert or update
   @BeforeInsert()
   @BeforeUpdate()

@@ -57,6 +57,22 @@ export class ExpensesController {
     return await this.expensesService.findAll(userId);
   }
 
+  @Get('upcoming-expenses')
+  @ApiOperation({ summary: 'Get upcoming expenses for the logged-in user' })
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Upcoming expenses successfully retrieved.',
+    type: [Expense],
+  })
+  async findUpcoming(@Req() req: any): Promise<Expense[]> {
+    const userId = req.user.userId;
+    if (!userId) {
+      throw new Error('User ID is not available in the request.');
+    }
+    return this.expensesService.findUpcomingRecurringExpenses(userId);
+  }
+
   @Get('monthly/:month/:year')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({

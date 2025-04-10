@@ -3,6 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { Expense } from './expense.entity/expense.entity';
+import {
+  addDays,
+  addWeeks,
+  addMonths,
+  addYears,
+  isAfter,
+  formatDistance,
+} from 'date-fns';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 
 @Injectable()
@@ -109,5 +117,55 @@ export class ExpensesService {
         `Expense with ID ${id} not found or not accessible by this user`,
       );
     }
+  }
+
+  async findUpcomingRecurringExpenses(userId: number): Promise<any[]> {
+    const recurringExpenses = await this.expenseRepository.find({
+      where: {
+        user: { id: userId },
+        isRecurring: true,
+      },
+      relations: ['user'],
+    });
+
+    const now = new Date();
+
+    const upcoming = recurringExpenses
+      .map((expense) => {
+        let nextDate = new Date(expense.datetime);
+
+        switch (expense.recurrencePattern) {
+          case 'daily':
+            nextDate = addDays(nextDate, 1);
+            break;
+          case 'weekly':
+            nextDate = addWeeks(nextDate, 1);
+            break;
+          case 'monthly':
+            nextDate = addMonths(nextDate, 1);
+            break;
+          case 'yearly':
+            nextDate = addYears(nextDate, 1);
+            break;
+          default:
+            return null;
+        }
+
+        if (isAfter(nextDate, now)) {
+          const timeUntilNext = formatDistance(nextDate, now, {
+            addSuffix: true,
+          });
+          return {
+            ...expense,
+            nextOccurrence: nextDate,
+            timeUntilNext,
+          };
+        }
+
+        return null;
+      })
+      .filter((e) => e !== null);
+
+    return upcoming;
   }
 }
